@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Library Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Library Management System</h1>
+    
+    <h2>Admin: Add Book</h2>
+    <form action="/add_book" method="post">
+        <input type="text" name="title" placeholder="Book Title" required>
+        <input type="text" name="author" placeholder="Author" required>
+        <button type="submit">Add Book</button>
+    </form>
+    
+    <h2>Books</h2>
+    <ul>
+        {% for book in books %}
+        <li>{{ book.title }} by {{ book.author }} - {% if book.available %}Available{% else %}Issued{% endif %}</li>
+        {% endfor %}
+    </ul>
+    
+    <h2>User: Issue Book</h2>
+    <form action="/issue_book" method="post">
+        <input type="text" name="user_name" placeholder="Your Name" required>
+        <select name="book_id" required>
+            <option value="">Select Book</option>
+            {% for book in books %}
+            {% if book.available %}
+            <option value="{{ book.id }}">{{ book.title }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+        <button type="submit">Issue Book</button>
+    </form>
+    
+    <h2>Issued Books</h2>
+    <ul>
+        {% for issue, book in issues %}
+        <li>{{ issue.user_name }} has {{ book.title }} <a href="/return_book/{{ issue.id }}">Return</a></li>
+        {% endfor %}
+    </ul>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
